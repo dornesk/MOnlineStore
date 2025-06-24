@@ -39,6 +39,9 @@ public class StoreService {
     }
 
     public void applyDiscount(double percent) {
+        if (percent < 0 || percent > 100) {
+            throw new IllegalArgumentException("Скидка должна быть от 0 до 100%.");
+        }
         cart.setDiscount(percent);
     }
 
