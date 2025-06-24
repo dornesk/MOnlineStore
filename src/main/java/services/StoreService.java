@@ -22,14 +22,19 @@ public class StoreService {
     }
 
     public void addProductToCart(String name, int quantity) {
-        for (Product p : catalog) {
-            if (p.name().equalsIgnoreCase(name)) {
-                cart.addItem(p, quantity);
-                System.out.println("Добавлено: " + name + " x" + quantity);
-                return;
-            }
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Число не может быть отрицательным.");
         }
-        System.out.println("Товар не найден: " + name);
+
+        catalog.stream()
+                .filter(n -> n.name().equalsIgnoreCase(name))
+                .findAny()
+                .ifPresentOrElse(o -> {
+                            cart.addItem(o, quantity);
+                            System.out.println("Добавлено: " + name + " x" + quantity);
+                        },
+                        () -> System.out.println("Товар не найден: " + name));
+
     }
 
     public void applyDiscount(double percent) {
