@@ -21,6 +21,7 @@ public class StoreService {
         }
     }
 
+    //Добавлена проверка на отрицательное количество и использование Stream API для поиска товара
     public void addProductToCart(String name, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Число не может быть отрицательным.");

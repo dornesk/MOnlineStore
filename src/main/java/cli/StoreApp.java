@@ -50,7 +50,7 @@ public class StoreApp {
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Необработанная ошибка");
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {//Добавлен catch, чтобы корректно обрабатывать ошибки ввода
                 System.out.println("Некорректные данные.");
             }
 
