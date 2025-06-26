@@ -56,20 +56,29 @@ public class StoreService {
         cart.setDiscount(percent);
     }
 
+    //вынесена логика в getCartSummaryLines
     public void printCart() {
-        for (CartItem item : cart.getItems()) {
-            System.out.println(item.getProduct().name() + " x" + item.getQuantity() + " = " + item.getTotalPrice());
-        }
-        System.out.println("Итого со скидкой: " + calculateTotal());
+        getCartSummaryLines().forEach(System.out::println);
+    }
+
+    //возвращает список строк, которые нужно вывести в корзине
+    public List<String> getCartSummaryLines() {
+        List<String> lines = cart.getItems().stream()
+                .map(item -> item.getProduct().name()
+                        + " x" + item.getQuantity()
+                        + " = " + item.getTotalPrice())
+                .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
+
+        lines.add(String.format("Итого со скидкой: %.1f", calculateTotal()));
+
+        return lines;
     }
 
     public double calculateTotal() {
-        double total = 0;
-        for (CartItem item : cart.getItems()) {
-            total += item.getTotalPrice();
-        }
-        double discountAmount = total * cart.getDiscountPercent() / 100;
-        return total - discountAmount;
+        double total = cart.getItems().stream()
+                .mapToDouble(CartItem::getTotalPrice)
+                .sum();
+        return total * (1 - cart.getDiscountPercent() / 100);
     }
 
     //метод для тестирования

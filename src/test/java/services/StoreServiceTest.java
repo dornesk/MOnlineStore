@@ -23,15 +23,20 @@ class StoreServiceTest {
     }
 
     @Test
-    @DisplayName("Высвечивает каталог по команде")
-    void showCatalog_shouldShowCatalog() {
+    @DisplayName("Каталог содержит ожидаемые строки")
+    void getCatalogAsStringList_shouldReturnFormattedProductList() {
+        List<String> catalogLines = storeService.getCatalogAsStringList();
 
+        assertEquals(1, catalogLines.size());
+        assertTrue(catalogLines.contains("shirt - 1000.0 руб."));
     }
 
     @Test
-    @DisplayName("Высвечивает сообщение о пустом каталоге")
-    void showCatalog_shouldShowNoCatalog() {
-
+    @DisplayName("Пустой каталог возвращает пустой список строк")
+    void getCatalogAsStringList_shouldReturnEmptyList() {
+        StoreService svc = new StoreService(new ArrayList<>());
+        List<String> catalogLines = svc.getCatalogAsStringList();
+        assertTrue(catalogLines.isEmpty());
     }
 
     @Test
@@ -67,21 +72,20 @@ class StoreServiceTest {
     }
 
     @Test
-    @DisplayName("Должен корректно показать содержимое корзины")
-    void printCart_shouldPrintCart() {
+    @DisplayName("Корректно возвращает данные корзины")
+    void getCartSummaryLines_shouldReturnFormattedLines() {
+        storeService.applyDiscount(10);
+        List<String> lines = storeService.getCartSummaryLines();
 
+        assertTrue(lines.contains("shirt x2 = 2000.0"));
+        assertTrue(lines.contains("Итого со скидкой: 1800,0"));
     }
 
     @Test
-    @DisplayName("Должен корректно обработать пустую корзину")
-    void printCart_shouldHandleEmptyCart() {
-
+    @DisplayName("Возвращает 0 для пустой корзины")
+    void calculateTotal_shouldBeZeroWhenEmpty() {
+        StoreService svc = new StoreService(List.of());
+        double total = svc.calculateTotal();
+        assertEquals(0, total);
     }
-
-    @Test
-    @DisplayName("Корректный подсчет итоговой суммы с учетом скидки")
-    void calculateTotal_shouldCalculate() {
-
-    }
-
 }
