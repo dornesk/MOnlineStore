@@ -15,16 +15,22 @@ public class StoreService {
         this.cart = new Cart();
     }
 
+    //вынесена логика в getCatalogAsStringList
     public void showCatalog() {
-        for (Product p : catalog) {
-            System.out.println(p.name() + " - " + p.price() + " руб.");
-        }
+        getCatalogAsStringList().forEach(System.out::println);
+    }
+
+    //возвращает список товаров в виде строк для отображения в showCatalog или тестирования
+    public List<String> getCatalogAsStringList() {
+        return catalog.stream()
+                .map(p -> p.name() + " - " + p.price() + " руб.")
+                .toList();
     }
 
     //Добавлена проверка на отрицательное количество и использование Stream API для поиска товара
     public void addProductToCart(String name, int quantity) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Число не может быть отрицательным.");
+            throw new IllegalArgumentException("Количество не может быть отрицательным.");
         }
 
         catalog.stream()
