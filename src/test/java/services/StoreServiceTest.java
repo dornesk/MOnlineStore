@@ -35,11 +35,13 @@ class StoreServiceTest {
     }
 
     @Test
-    @DisplayName("Корректно добавляет товар в каталог")
+    @DisplayName("Корректно добавляет товар в корзину")
     void addProductToCart_shouldAddProductToCart() {
-        storeService.addProductToCart("shirt", 1);
+        boolean result = storeService.addProductToCart("shirt", 1);
+        assertTrue(result);
         assertEquals(1, storeService.getCartItems().size());
     }
+
 
     @Test
     @DisplayName("Выбрасывает исключение при количестве <=0")

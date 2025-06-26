@@ -5,6 +5,7 @@ import models.CartItem;
 import models.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public class StoreService {
     private final List<Product> catalog;
@@ -27,21 +28,25 @@ public class StoreService {
                 .toList();
     }
 
-    //Добавлена проверка на отрицательное количество и использование Stream API для поиска товара
-    public void addProductToCart(String name, int quantity) {
+    // Возвращает true, если товар добавлен в корзину, иначе false
+    public boolean addProductToCart(String name, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Количество не может быть отрицательным.");
         }
 
-        catalog.stream()
-                .filter(n -> n.name().equalsIgnoreCase(name))
-                .findAny()
-                .ifPresentOrElse(o -> {
-                            cart.addItem(o, quantity);
-                            System.out.println("Добавлено: " + name + " x" + quantity);
-                        },
-                        () -> System.out.println("Товар не найден: " + name));
+        return findProductByName(name)
+                .map(product -> {
+                    cart.addItem(product, quantity);
+                    return true;
+                })
+                .orElse(false);
+    }
 
+    // Поиск товара по имени (инкапсулируем Stream)
+    private Optional<Product> findProductByName(String name) {
+        return catalog.stream()
+                .filter(p -> p.name().equalsIgnoreCase(name))
+                .findFirst();
     }
 
     public void applyDiscount(double percent) {
