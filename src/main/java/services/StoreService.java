@@ -60,4 +60,9 @@ public class StoreService {
         double discountAmount = total * cart.getDiscountPercent() / 100;
         return total - discountAmount;
     }
+
+    //метод для тестирования
+    public List<CartItem> getCartItems() {
+        return cart.getItems();
+    }
 }
